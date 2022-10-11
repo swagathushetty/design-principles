@@ -38,6 +38,7 @@ class Journal {
     
 }
 
+// we do all the file related tasks in a separate class
 class PersistanceManager {
      saveFile(jounral,filename){
         fs.writeFileSync(filename,jounral.toString())
