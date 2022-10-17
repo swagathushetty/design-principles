@@ -102,21 +102,68 @@ class AndSpecification {
     }
 }
 
+
 let bf=new BetterFilter()
+
 
 //green products filter
 for(let p of bf.filter(products,new ColorSpecification(Color.green))){
     console.log(`* ${p.name} ${p.color}`)
 }
 
-
+console.log('^^^^^^^^^^^^^^^^^')
 //large and green products
 let spec=new AndSpecification(
     new ColorSpecification(Color.green),
     new SizeSpecification(Size.large)
 )
-
-console.log('^^^^^^^^^^^^^^^^^')
 for(let p of bf.filter(products,spec)){
     console.log(`% ${p.name} ${p.color}`)
 }
+
+
+
+//using functional approach
+//general interface
+// function filter(items, isSatisfied) {
+//     return items.filter(x => isSatisfied(x));
+//   }
+   
+//   //specfic Interfaces.
+//   function colorSpecification(color) {
+//     return function isSatisfied(item) {
+//       return item.color === color; //utilising closure
+//     }
+//   }
+   
+//   function sizeSpecification(size) { 
+//     return function isSatisfied(item) {
+//       return item.size === size;
+//     }
+//   }
+   
+//   function andSpecification(...specs) {
+//     return function isSatisfied(item) {
+//       return specs.every(spec => spec(item));
+//     }
+//   }
+   
+//   let greenColor = colorSpecification(Color.green);
+//   let largeSize = sizeSpecification(Size.large);
+//   let greenColor_largeSize = andSpecification(
+//     greenColor,
+//     largeSize
+//   );
+   
+   
+//   for (let p of filter(products, greenColor)) {
+//     console.log(`Green products (new): ${p.name} is green`);
+//   }
+   
+//   for (let p of filter(products, largeSize)) {
+//     console.log(`Large products: ${p.name} is large`);
+//   }
+   
+//   for (let p of filter(products, greenColor_largeSize)){
+//     console.log(`Large and green products: ${p.name} is large and green`);
+//     }
