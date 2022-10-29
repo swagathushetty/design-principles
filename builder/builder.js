@@ -11,9 +11,9 @@ class Tag {
         html.push(`${i}<${this.name}>\n`);
 
         if (this.text.length > 0){
-        html.push(' '.repeat(Tag.indentSize * (indent+1)));
-        html.push(this.text);
-        html.push('\n');
+            html.push(' '.repeat(Tag.indentSize * (indent+1)));
+            html.push(this.text);
+            html.push('\n');
         }
 
         for (let child of this.children)
@@ -84,7 +84,7 @@ for(let word of words){
 }
 console.log(builder.root.toString())
 
-
+//more cleaner way than maunally looping
 builder.clear()
 builder
    .addChildFluent('li','foo')
