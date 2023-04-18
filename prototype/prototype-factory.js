@@ -1,19 +1,20 @@
 class Address
 {
-  constructor(streetAddress, city, country) {
+  constructor(suite, streetAddress, city)
+  {
+    this.suite = suite;
     this.streetAddress = streetAddress;
     this.city = city;
-    this.country = country;
   }
 
   toString()
   {
-    return `Address: ${this.streetAddress}, ` +
-      `${this.city}, ${this.country}`;
+    return `Suite ${this.suite}, ` +
+      `${this.streetAddress}, ${this.city}`;
   }
 }
 
-class Person
+class Employee // renamed
 {
   constructor(name, address)
   {
@@ -23,14 +24,14 @@ class Person
 
   toString()
   {
-    return `${this.name} lives at ${this.address}`;
+    return `${this.name} works at ${this.address}`;
   }
 
   greet()
   {
     console.log(
       `Hi, my name is ${this.name}, ` +
-      `I live at ${this.address.toString()}`
+      `I work at ${this.address.toString()}` //!
     );
   }
 }
@@ -54,7 +55,7 @@ class Serializer
       for (let key in object)
       {
         if (object.hasOwnProperty(key) && object[key] != null)
-          this.markRecursive(object[key]);
+          this.markRecursive(object[key]); // ^^^^^^^^^^ important
       }
     }
   }
@@ -85,24 +86,39 @@ class Serializer
   }
 }
 
-let john = new Person('John',
-  new Address('123 London Road', 'London', 'UK'));
+class EmployeeFactory
+{
+  static _newEmployee(proto, name, suite)
+  {
+    let copy = EmployeeFactory.serializer.clone(proto);
+    copy.name = name;
+    copy.address.suite = suite;
+    return copy;
+  }
 
-let jane = JSON.parse(JSON.stringify(john));
+  static newMainOfficeEmployee(name, suite)
+  {
+    return this._newEmployee(
+      EmployeeFactory.main, name, suite
+    );
+  }
 
-jane.name = 'Jane';
-jane.address.streetAddress = '321 Angel St';
+  static newAuxOfficeEmployee(name, suite)
+  {
+    return this._newEmployee(
+      EmployeeFactory.aux, name, suite
+    );
+  }
+}
 
-john.greet();
-// this won't work
-// jane.greet();
+EmployeeFactory.serializer = new Serializer([Employee, Address]);
+EmployeeFactory.main = new Employee(null,
+  new Address(null, '123 East Dr', 'London'));
+EmployeeFactory.aux = new Employee(null,
+  new Address(null, '200 London Road', 'Oxford'));
 
-// try a dedicated serializer
-let s = new Serializer([Person,Address]); // pain point
-jane = s.clone(john);
-
-jane.name = 'Jane';
-jane.address.streetAddress = '321 Angel St';
+let john = EmployeeFactory.newMainOfficeEmployee('John', 4321);
+let jane = EmployeeFactory.newAuxOfficeEmployee('Jane', 222);
 
 console.log(john.toString());
 console.log(jane.toString());
