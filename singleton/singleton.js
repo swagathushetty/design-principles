@@ -8,3 +8,8 @@ class Singleton {
         this.constructor.instance = this
     }
 }
+
+let s1 = new Singleton()
+let s2 = new Singleton()
+
+console.log('s1 an s2',s1===s2)
